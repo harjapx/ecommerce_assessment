@@ -4,7 +4,7 @@ from app import db
 from app.utils import clean_data
 
 # Load the CSV data
-df = pd.read_csv('data/products.csv')
+df = pd.read_csv('static/products.csv')
 
 # Clean the data
 df = clean_data(df)
