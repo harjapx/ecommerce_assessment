@@ -1,9 +1,9 @@
 from flask import request, jsonify
-from . import app, db
-from .models import User
-import bcrypt, jwt
+from app import db, app
+from app.models import User, Product
+import bcrypt
+import jwt
 from datetime import datetime, timedelta
-from .models import Product
 import pandas as pd
 
 @app.route('/signup', methods=['POST'])
