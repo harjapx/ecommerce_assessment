@@ -1,0 +1,13 @@
+product_id,product_name,category,price,quantity_sold,rating,review_count
+1,Smartphone,Electronics,699.99,150,4.5,200
+2,Laptop,Electronics,999.99,100,4.2,150
+3,Headphones,Electronics,199.99,200,4.8,300
+4,T-Shirt,Clothing,19.99,300,4.3,100
+5,Jeans,Clothing,39.99,250,4.0,120
+6,Jacket,Clothing,79.99,150,4.6,80
+7,Blender,Home Appliances,49.99,100,4.1,60
+8,Toaster,Home Appliances,29.99,200,4.4,120
+9,Microwave,Home Appliances,89.99,80,4.2,90
+10,Book,Books,15.99,500,4.7,500
+11,Notebook,Books,9.99,300,4.5,400
+12,Pen,Books,1.99,1000,4.8,600

@@ -45,22 +45,34 @@ def login():
     
 @app.route('/summary', methods=['GET'])
 def summary():
-    products = db.session.query(Product.category, 
-                                (Product.price * Product.quantity_sold).label('total_revenue'),
-                                Product.product_name,
-                                Product.quantity_sold).all()
+    # Query the database for products and their revenue
+    products = db.session.query(
+        Product.category, 
+        (Product.price * Product.quantity_sold).label('total_revenue'),
+        Product.product_name,
+        Product.quantity_sold
+    ).all()
     
+    # Create a DataFrame from the retrieved data
     df = pd.DataFrame(products, columns=['category', 'total_revenue', 'product_name', 'quantity_sold'])
-    
-    df['top_product'] = df.groupby('category')['quantity_sold'].idxmax().apply(lambda x: df['product_name'][x])
-    df['top_product_quantity_sold'] = df.groupby('category')['quantity_sold'].transform('max')
 
+    # Handle the case where no products are found
+    if df.empty:
+        return jsonify({"message": "No products found in the database"}), 404
+
+    # Calculate top product and quantity sold for each category
+    top_products = df.loc[df.groupby('category')['quantity_sold'].idxmax()]
     summary_report = df.groupby('category').agg({
-        'total_revenue': 'sum',
-        'top_product': 'first',
-        'top_product_quantity_sold': 'first'
-    })
-
+        'total_revenue': 'sum'
+    }).reset_index().merge(top_products[['category', 'product_name', 'quantity_sold']], on='category')
+    
+    summary_report.rename(columns={
+        'product_name': 'top_product',
+        'quantity_sold': 'top_product_quantity_sold'
+    }, inplace=True)
+    
+    # Save the summary report to CSV
     summary_report.to_csv('static/summary_report.csv', index=False)
     
     return jsonify({"message": "Summary report generated", "file": "/static/summary_report.csv"})
+
