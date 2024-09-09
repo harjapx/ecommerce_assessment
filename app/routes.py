@@ -28,7 +28,11 @@ def login():
     
     user = User.query.filter_by(username=username).first()
     
-    if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
+    if user:
+        print("Stored hashed password:", user.password)
+        print("Provided password:", password)
+    
+    if user and bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()):
         token = jwt.encode(
             {'user_id': user.id, 'exp': datetime.utcnow() + timedelta(hours=1)}, 
             app.config['SECRET_KEY'], 
@@ -37,6 +41,7 @@ def login():
         return jsonify({"token": token})
     else:
         return jsonify({"message": "Invalid credentials"}), 401
+
     
 @app.route('/summary', methods=['GET'])
 def summary():
